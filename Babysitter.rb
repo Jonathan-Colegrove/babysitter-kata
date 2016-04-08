@@ -7,16 +7,26 @@
 
   def startingHour
       puts "Hi, #{@name}! When would you be starting?
-            Please enter any hour from 5pm until 3am (in whole hours only)"
+            Please enter any hour from 5pm until 3am"
       @starting = gets.chomp
-      return endingHour
+      unless @starting.delete("^0-9").to_i <5
+          return endingHour
+      else
+        puts "Sorry, what was that again?"
+        return startingHour
+      end
   end
 
   def endingHour
       puts "And when would you be babysitting until?
-            Please enter any hour from 6pm until 4am (in whole hours only)"
+            Please enter any hour from 6pm until 4am"
       @ending = gets.chomp
-      return bedTime
+      unless @ending.delete("^0-9").to_i >=4|| @ending.delete("^0-9").to_i>6
+          return bedTime
+      else
+        puts "Sorry, what was that again?"
+        return endingHour
+      end
   end
 
   def bedTime
@@ -33,13 +43,13 @@
   def hours
     case
     when @starting.delete("^0-9").to_i >=5 && @ending.delete("^0-9").to_i <= @bedTime.delete("^0-9").to_i
-    puts "Your pay is $#{(@ending.to_i-@starting.to_i.to_i)*12}"
+    puts "Your pay is $#{(@ending.to_i-@starting.to_i.to_i)*12}."
 
     when @starting.delete("^0-9").to_i >=@bedTime.delete("^0-9").to_i && @ending.delete("^0-9").to_i <= 12
-    puts "Your pay is $#{(@ending.to_i-@starting.to_i)*8}"
+    puts "Your pay is $#{(@ending.to_i-@starting.to_i)*8}."
 
     when @starting.delete("^0-9").to_i >=12 && @ending.delete("^0-9").to_i <= 4
-    puts "Your pay is $#{(@ending.to_i-@starting.to_i)*16}"
+    puts "Your pay is $#{(@ending.to_i-@starting.to_i)*16}."
     end
   end
 
