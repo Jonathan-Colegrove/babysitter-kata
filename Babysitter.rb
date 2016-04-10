@@ -42,8 +42,8 @@
         then @bedTime+=12
       end
       puts "For every whole hour from:
-                5pm until bedtime (#{@bedTime}), the rate is $12/hour.
-                #{@bedTime} until midnight, the rate is $8/hr.
+                5pm until bedtime (#{@bedTime-12}), the rate is $12/hour.
+                #{@bedTime-12} until midnight, the rate is $8/hr.
                 midnight until 4am, the rate is $16/hr.
             There is no pay for incomplete hours."
   #    return hours
@@ -52,7 +52,7 @@
 
 
 def finalPay
-  $payBeforeBedtime = (@starting-@ending)*12
+  $payBeforeBedtime = (@ending-@starting)*12
   $payAfterBedtime = (24-@bedTime)*8
   #28= 4am (24hr day + 4hrs)
   $payAfterMidnight = (28-@ending)*16
