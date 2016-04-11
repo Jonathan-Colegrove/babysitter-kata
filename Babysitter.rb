@@ -9,11 +9,12 @@
       puts "Hi, #{@name}! When would you be starting?
             Please enter any hour from 5pm until 3am"
       @starting = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
-          if @starting<17
-            then @starting+=12
-          end
+      @starting>=5 && @starting<=12 ? @starting+=12 : @starting+=24
+      
       unless @starting<17
-          return endingHour
+              #need to make sure partial hours ex.- 5:30 won't enter as 530, which is >27
+              #unless @starting<17 || @starting>27
+        return endingHour
       else
         puts "Sorry, what was that again?"
         return startingHour
@@ -24,9 +25,8 @@
       puts "And when would you be babysitting until?
             Please enter any hour from 6pm until 4am"
       @ending = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
-      if @ending<12
-        then @ending+=12
-      end
+      @ending>=1 && @ending<=4 ? @ending+=24 : @ending+=12
+
       #unless @ending>=18 && @ending<=28
           return bedTime
       #else
@@ -38,9 +38,15 @@
   def bedTime
       puts "When do the children go to bed?"
       @bedTime=gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
-      if @bedTime<12
-        then @bedTime+=12
-      end
+      @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
+
+
+    # @bedTime<1 ? @bedTime+=12 : @bedTime+=24
+    # if @bedTime<12
+     #   then @bedTime+=12
+    #elsif @bedTime>=1 && @bedTime<=4
+    #    then @bedTime+=24
+    #  end
   return finalPay
   end
 
