@@ -11,13 +11,10 @@
       @starting = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
       @starting>=5 && @starting<=12 ? @starting+=12 : @starting+=24
       
-      unless @starting<17
-              #need to make sure partial hours ex.- 5:30 won't enter as 530, which is >27
-              #unless @starting<17 || @starting>27
-        return endingHour
-      else
-        puts "Sorry, what was that again?"
+      if @starting<17 || @starting>27
+        puts "Sorry, what was that again? Please enter any hour from 5pm until 3am"
         return startingHour
+      else return endingHour
       end
   end
 
@@ -27,12 +24,11 @@
       @ending = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
       @ending>=1 && @ending<=4 ? @ending+=24 : @ending+=12
 
-      #unless @ending>=18 && @ending<=28
-          return bedTime
-      #else
-       # puts "Sorry, what was that again?"
-      #  return endingHour
-     # end
+    if @ending>28 || @ending<18
+        puts "Sorry, what was that again? Please enter any hour from 6pm until 4am" 
+     return endingHour
+    else return bedTime
+    end
   end
 
   def bedTime
@@ -64,7 +60,7 @@ def finalPay
         then @finalPay=$payBeforeBedtime+$payAfterBedtime
     else @finalPay = $payBeforeBedtime+$payAfterBedtime+$payAfterMidnight
     end
-  puts "Your will earn $#{@finalPay} for babysitting today!"
+  puts "You will earn $#{@finalPay} for babysitting today!"
 end
 
 welcome
