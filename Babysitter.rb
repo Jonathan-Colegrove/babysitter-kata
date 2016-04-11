@@ -37,7 +37,8 @@
 
   def bedTime
       puts "When do the children go to bed?"
-      @bedTime=gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
+      @bed=gets.chomp
+      @bedTime=@bed.delete("^0-9[ ][aApP][mM]").to_i
       @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
 
 
@@ -52,9 +53,9 @@
 
 
 def finalPay
-    puts "For every whole hour from:
-              5pm until bedtime (#{@bedTime-12}), the rate is $12/hour.
-              #{@bedTime-12} until midnight, the rate is $8/hr.
+  puts "For every whole hour from:
+              5pm until bedtime (#{@bed}), the rate is $12/hour.
+              #{@bed} until midnight, the rate is $8/hr.
               midnight until 4am, the rate is $16/hr.
           There is no pay for incomplete hours."
   $payBeforeBedtime = (@bedTime-@starting)*12
