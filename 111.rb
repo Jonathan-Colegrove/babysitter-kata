@@ -41,16 +41,12 @@
       @bedTime=@bed.delete("^0-9[ ][aApP][mM]").to_i
       @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
 
-
-    # @bedTime<1 ? @bedTime+=12 : @bedTime+=24
-    # if @bedTime<12
-     #   then @bedTime+=12
-    #elsif @bedTime>=1 && @bedTime<=4
-    #    then @bedTime+=24
-    #  end
-  return finalPay
+    if @bedTime>28 || @bedTime<17
+        puts "Whoa, that's pretty late! Do you want to double-check & enter a bedtime between 5pm & 4am?" 
+     return bedTime
+    else return finalPay
+    end
   end
-
 
 def finalPay
   puts "For every whole hour from:
