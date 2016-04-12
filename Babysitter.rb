@@ -57,7 +57,12 @@ def finalPay
           There is no pay for incomplete hours."
 
   $payBeforeBedtime = (@bedTime-@starting)*12
-  $payAfterBedtime = @ending<=24 ? (@ending-@bedTime)*8 : (24-@bedTime)*8
+  
+  if @ending<=24
+    $payAfterBedtime = (@ending-@bedTime)*8
+  else $payAfterBedtime = (24-@bedTime)*8
+  end
+
   $payAfterMidnight = (@ending-24)*16
 
     if @ending<24 && @ending<@bedTime
