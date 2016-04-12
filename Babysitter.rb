@@ -17,11 +17,6 @@
         Starting at 5pm enter '0'"
       @startingM = gets.chomp.to_i
 
-      # to disallow inputting only a letter
-      if @startingH==0 || @startingM==0
-        puts "Sorry, what was that again?"
-        return startingHour
-      end
       @startingH>=5 && @startingH<=12 ? @startingH+=12 : @startingH+=24
 
       if @startingH<17 || @startingH>27
@@ -38,7 +33,7 @@
       @endingH = gets.chomp.to_i
 
       puts "How many minutes after the ending hour would you start?
-        (example: ending at 10:30pm --> enter '30'.
+        (example: ending at 10:30pm you would enter '30'.
           Ending at 10pm enter '0')"
       @endingM = gets.chomp.to_i
 
@@ -60,18 +55,16 @@
       @bedTime=@bT
       @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
 
-    puts "How many minutes after the bedtime hour do the children go to bed?
-      (example: bedtime at 8:30pm you would enter '30')"
-      @bedTimeM=gets.chomp.to_i
-
-    @bed = "#{@bT}" + ":" + "#{@bedTimeM}"
-
     if @bedTime>28 || @bedTime<17
         puts "Whoa, that's pretty late!
         Do you want to double-check & enter a bedtime between 5pm & 4am?" 
-     return bedTime
-    else return finalPay
+      return bedTime
+      else puts "How many minutes after #{@bT} do the children go to bed?
+      (example: bedtime at 8:30pm you would enter '30')"
+      @bedTimeM=gets.chomp.to_i
     end
+    @bed = "#{@bT}" + ":" + "#{@bedTimeM}"
+    return finalPay
   end
 
 def finalPay
@@ -81,29 +74,38 @@ def finalPay
               midnight until 4am, the rate is $16/hr.
           There is no pay for partial hours."
 
-if @startingM+@endingM==60
-  $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
-    if @endingH<=24
+  if @startingM+@endingM==60 && @endingH==24 then
+    $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
+    $payAfterBedtime = ((@endingH-@bedTime)+((@endingM/60)*16)-(@bedTimeM/60))*8
+    $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
+
+    elsif @startingM+@endingM==60 && @endingH<24 then
+      $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
       $payAfterBedtime = ((@endingH-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
-      else $payAfterBedtime = ((24-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
-    end
-  $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
+      $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
 
-else
-  $payBeforeBedtime = (@bedTime-@startingH)*12
-    if @endingH<=24
-      $payAfterBedtime = (@endingH-@bedTime)*8
-      else $payAfterBedtime = (24-@bedTime)*8
-    end
-  $payAfterMidnight = (@endingH-24)*16
-end
+    elsif @startingM+@endingM==60 && @endingH>24 then
+      $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
+      $payAfterBedtime = ((24-@bedTime)-(@bedTimeM/60))*8
+      $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
 
-    if @endingH<24 && @endingH<@bedTime
-        then @finalPay=$payBeforeBedtime
-    elsif @endingH<=24 && @endingH>@bedTime
-        then @finalPay=$payBeforeBedtime+$payAfterBedtime
+    elsif @startingM+@endingM!=60 && @endingH<=24 then
+        $payBeforeBedtime = (@bedTime-@startingH)*12
+        $payAfterBedtime = (@endingH-@bedTime)*8
+        $payAfterMidnight = (@endingH-24)*16
+
+    else
+     $payBeforeBedtime = (@bedTime-@startingH)*12
+     $payAfterBedtime = (24-@bedTime)*8
+     $payAfterMidnight = (@endingH-24)*16
+  end
+
+  if @endingH<24 && @endingH<@bedTime then
+        @finalPay=$payBeforeBedtime
+    elsif @endingH<=24 && @endingH>@bedTime then
+        @finalPay=$payBeforeBedtime+$payAfterBedtime
     else @finalPay = $payBeforeBedtime+$payAfterBedtime+$payAfterMidnight
-    end
+  end
   puts "You will earn $#{@finalPay} for babysitting today!"
 end
 
