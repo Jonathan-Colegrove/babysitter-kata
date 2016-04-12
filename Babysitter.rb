@@ -6,17 +6,25 @@
   end
 
   def startingHour
-      puts "Hi, #{@name}! When would you be starting?
-            Please enter any hour from 5pm until 3am"
-      @starting = gets.chomp.to_i
+      puts "Hi, #{@name}! What hour would you start on?
+      Please enter any hour from 5pm until 3am
+      (example: starting at 5:30pm you would enter '5').
+      We'll take care of the minutes shortly."
+      @startingH = gets.chomp.to_i
+
+      puts "How many minutes after the starting hour would you start?
+      (example: starting at 5:30pm you would enter '30'.
+        Starting at 5pm enter '0'"
+      @startingM = gets.chomp.to_i
+
       # to disallow inputting only a letter
-      if @starting==0
+      if @startingH==0 || @startingM==0
         puts "Sorry, what was that again?"
         return startingHour
       end
-      @starting>=5 && @starting<=12 ? @starting+=12 : @starting+=24
+      @startingH>=5 && @startingH<=12 ? @startingH+=12 : @startingH+=24
 
-      if @starting<17 || @starting>27
+      if @startingH<17 || @startingH>27
         puts "Sorry, what was that again?"
         return startingHour
       else return endingHour
@@ -24,12 +32,19 @@
   end
 
   def endingHour
-      puts "And when would you be babysitting until?
-            Please enter any hour from 6pm until 4am"
-      @ending = gets.chomp.to_i
-      @ending>=1 && @ending<=4 ? @ending+=24 : @ending+=12
+      puts "What hour would you end on? Please enter any hour from 6pm until 4am
+      (example: ending at 10:30pm you would enter '10'.
+        We'll take care of the minutes shortly)"
+      @endingH = gets.chomp.to_i
 
-    if @ending>28 || @ending<18
+      puts "How many minutes after the ending hour would you start?
+        (example: ending at 10:30pm --> enter '30'.
+          Ending at 10pm enter '0')"
+      @endingM = gets.chomp.to_i
+
+      @endingH>=1 && @endingH<=4 ? @endingH+=24 : @endingH+=12
+
+    if @endingH>28 || @endingH<18
         puts "Sorry, what was that again?" 
      return endingHour
     else return bedTime
@@ -37,13 +52,23 @@
   end
 
   def bedTime
-      puts "When do the children go to bed?"
-      @bed=gets.chomp
-      @bedTime=@bed.to_i
+    puts "What hour do the children go to bed at?
+      (example: bedtime at 8:30pm you would enter '8'.
+        We'll take care of the minutes shortly)"
+
+      @bT=gets.chomp.to_i
+      @bedTime=@bT
       @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
 
+    puts "How many minutes after the bedtime hour do the children go to bed?
+      (example: bedtime at 8:30pm you would enter '30')"
+      @bedTimeM=gets.chomp.to_i
+
+    @bed = "#{@bT}" + ":" + "#{@bedTimeM}"
+
     if @bedTime>28 || @bedTime<17
-        puts "Whoa, that's pretty late! Do you want to double-check & enter a bedtime between 5pm & 4am?" 
+        puts "Whoa, that's pretty late!
+        Do you want to double-check & enter a bedtime between 5pm & 4am?" 
      return bedTime
     else return finalPay
     end
@@ -54,20 +79,28 @@ def finalPay
               5pm until bedtime (#{@bed}), the rate is $12/hour.
               #{@bed} until midnight, the rate is $8/hr.
               midnight until 4am, the rate is $16/hr.
-          There is no pay for incomplete hours."
+          There is no pay for partial hours."
 
-  $payBeforeBedtime = (@bedTime-@starting)*12
-  
-  if @ending<=24
-    $payAfterBedtime = (@ending-@bedTime)*8
-  else $payAfterBedtime = (24-@bedTime)*8
-  end
+if @startingM+@endingM==60
+  $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
+    if @endingH<=24
+      $payAfterBedtime = ((@endingH-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
+      else $payAfterBedtime = ((24-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
+    end
+  $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
 
-  $payAfterMidnight = (@ending-24)*16
+else
+  $payBeforeBedtime = (@bedTime-@startingH)*12
+    if @endingH<=24
+      $payAfterBedtime = (@endingH-@bedTime)*8
+      else $payAfterBedtime = (24-@bedTime)*8
+    end
+  $payAfterMidnight = (@endingH-24)*16
+end
 
-    if @ending<24 && @ending<@bedTime
+    if @endingH<24 && @endingH<@bedTime
         then @finalPay=$payBeforeBedtime
-    elsif @ending<=24 && @ending>@bedTime
+    elsif @endingH<=24 && @endingH>@bedTime
         then @finalPay=$payBeforeBedtime+$payAfterBedtime
     else @finalPay = $payBeforeBedtime+$payAfterBedtime+$payAfterMidnight
     end
