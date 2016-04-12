@@ -8,11 +8,16 @@
   def startingHour
       puts "Hi, #{@name}! When would you be starting?
             Please enter any hour from 5pm until 3am"
-      @starting = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
+      @starting = gets.chomp.to_i
+      # to disallow inputting only a letter
+      if @starting==0
+        puts "Sorry, what was that again?"
+        return startingHour
+      end
       @starting>=5 && @starting<=12 ? @starting+=12 : @starting+=24
-      
+
       if @starting<17 || @starting>27
-        puts "Sorry, what was that again? Please enter any hour from 5pm until 3am"
+        puts "Sorry, what was that again?"
         return startingHour
       else return endingHour
       end
@@ -21,11 +26,11 @@
   def endingHour
       puts "And when would you be babysitting until?
             Please enter any hour from 6pm until 4am"
-      @ending = gets.chomp.delete("^0-9[ ][aApP][mM]").to_i
+      @ending = gets.chomp.to_i
       @ending>=1 && @ending<=4 ? @ending+=24 : @ending+=12
 
     if @ending>28 || @ending<18
-        puts "Sorry, what was that again? Please enter any hour from 6pm until 4am" 
+        puts "Sorry, what was that again?" 
      return endingHour
     else return bedTime
     end
@@ -34,7 +39,7 @@
   def bedTime
       puts "When do the children go to bed?"
       @bed=gets.chomp
-      @bedTime=@bed.delete("^0-9[ ][aApP][mM]").to_i
+      @bedTime=@bed.to_i
       @bedTime>=1 && @bedTime<=4 ? @bedTime+=24 : @bedTime+=12
 
     if @bedTime>28 || @bedTime<17
@@ -50,6 +55,7 @@ def finalPay
               #{@bed} until midnight, the rate is $8/hr.
               midnight until 4am, the rate is $16/hr.
           There is no pay for incomplete hours."
+
   $payBeforeBedtime = (@bedTime-@starting)*12
   $payAfterBedtime = @ending<=24 ? (@ending-@bedTime)*8 : (24-@bedTime)*8
   $payAfterMidnight = (@ending-24)*16
