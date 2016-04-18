@@ -75,7 +75,13 @@ def finalPay
           There is no pay for partial hours."
 
           @minutes=@startingM+@endingM
-$payBeforeBedtime= @minutes==60 ? ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12 : (@bedTime-@startingH)*12
+
+  if @minutes==60 && @bedTime>=@endingTime
+    $payBeforeBedtime = ((@endingTime-@startingH)-(@startingM/60)+(@endingM/60))*12
+  elsif @minutes==60 && @bedTime<@endingTime
+    $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
+  else $payBeforeBedtime = (@bedTime-@startingH)*12
+  end
 
   if @minutes==60 && @endingH==24 then
     $payAfterBedtime = ((@endingH-@bedTime)+((@endingM/60)*16)-(@bedTimeM/60))*8
