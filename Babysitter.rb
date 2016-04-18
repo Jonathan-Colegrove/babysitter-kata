@@ -74,37 +74,31 @@ def finalPay
               midnight until 4am, the rate is $16/hr.
           There is no pay for partial hours."
 
-  if @startingM+@endingM==60 && @endingH==24 then
-    $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
+          @minutes=@startingM+@endingM
+$payBeforeBedtime= @minutes==60 ? ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12 : (@bedTime-@startingH)*12
+
+  if @minutes==60 && @endingH==24 then
     $payAfterBedtime = ((@endingH-@bedTime)+((@endingM/60)*16)-(@bedTimeM/60))*8
     $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
-
-    elsif @startingM+@endingM==60 && @endingH<24 then
-      $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
-      $payAfterBedtime = ((@endingH-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
-      $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
-
-    elsif @startingM+@endingM==60 && @endingH>24 then
-      $payBeforeBedtime = ((@bedTime-@startingH)-(@startingM/60)+(@bedTimeM/60))*12
-      $payAfterBedtime = ((24-@bedTime)-(@bedTimeM/60))*8
-      $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
-
-    elsif @startingM+@endingM!=60 && @endingH<=24 then
-        $payBeforeBedtime = (@bedTime-@startingH)*12
-        $payAfterBedtime = (@endingH-@bedTime)*8
-        $payAfterMidnight = (@endingH-24)*16
-
-    else
-     $payBeforeBedtime = (@bedTime-@startingH)*12
-     $payAfterBedtime = (24-@bedTime)*8
-     $payAfterMidnight = (@endingH-24)*16
+  elsif @minutes==60 && @endingH<24 then
+    $payAfterBedtime = ((@endingH-@bedTime)+(@endingM/60)-(@bedTimeM/60))*8
+    $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
+  elsif @minutes==60 && @endingH>24 then
+    $payAfterBedtime = ((24-@bedTime)-(@bedTimeM/60))*8
+    $payAfterMidnight = ((@endingH-24)+(@endingM/60))*16
+  elsif @minutes!=60 && @endingH<=24 then
+    $payAfterBedtime = (@endingH-@bedTime)*8
+    $payAfterMidnight = (@endingH-24)*16
+  else
+    $payAfterBedtime = (24-@bedTime)*8
+    $payAfterMidnight = (@endingH-24)*16
   end
 
   if @endingH<24 && @endingH<@bedTime then
-        @finalPay=$payBeforeBedtime
-    elsif @endingH<=24 && @endingH>@bedTime then
-        @finalPay=$payBeforeBedtime+$payAfterBedtime
-    else @finalPay = $payBeforeBedtime+$payAfterBedtime+$payAfterMidnight
+    @finalPay=$payBeforeBedtime
+  elsif @endingH<=24 && @endingH>@bedTime then
+    @finalPay=$payBeforeBedtime+$payAfterBedtime
+  else @finalPay = $payBeforeBedtime+$payAfterBedtime+$payAfterMidnight
   end
   puts "You will earn $#{@finalPay} for babysitting today!"
 end
